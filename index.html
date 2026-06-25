@@ -20,107 +20,109 @@
   --text-3:#a8a8a3;
   --r:7px;
   --r-lg:10px;
+  --red:#dc2626;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;height:100vh;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
 
-/* Header */
-header{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px;flex-shrink:0}
+header{background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:10px;height:52px;position:sticky;top:0;z-index:100}
 .logo{width:26px;height:26px;background:var(--orange);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .logo svg{width:14px;height:14px;fill:white}
 header h1{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em}
-header .ver{font-size:11px;color:var(--text-3);background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-left:2px}
-header .spacer{flex:1}
-header .hint{font-size:11.5px;color:var(--text-3)}
+.ver{font-size:11px;color:var(--text-3);background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 6px;margin-left:2px}
+.spacer{flex:1}
+.hint{font-size:11.5px;color:var(--text-3)}
 
-/* Layout */
-.app{display:grid;grid-template-columns:372px 1fr;height:calc(100vh - 52px)}
-.left{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
-.right{display:flex;flex-direction:column;padding:18px;gap:12px;background:var(--bg)}
+.page{max-width:660px;margin:0 auto;padding:24px 20px 60px}
 
-/* Section */
+.group{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:12px}
+.group-header{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:8px}
+.group-title{font-size:12px;font-weight:600;color:var(--text)}
+.group-sub{font-size:11px;color:var(--text-3);margin-left:auto}
+.group-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+
 .sec{display:flex;flex-direction:column;gap:5px}
 .sl{font-size:10px;font-weight:600;color:var(--text-3);letter-spacing:.07em;text-transform:uppercase}
-.divider{height:1px;background:var(--border);flex-shrink:0}
 
-/* Seg */
 .seg{display:flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:2px}
 .seg button{flex:1;padding:5px 4px;font-size:12px;background:none;border:none;cursor:pointer;color:var(--text-2);border-radius:5px;font-family:inherit;transition:all .12s;white-space:nowrap}
 .seg button.on{background:var(--surface);color:var(--text);font-weight:500;box-shadow:0 1px 2px rgba(0,0,0,.07)}
 
-/* Tags */
 .tags{display:flex;flex-wrap:wrap;gap:4px}
 .tag{padding:4px 10px;border-radius:99px;font-size:11.5px;border:1px solid var(--border-strong);cursor:pointer;color:var(--text-2);background:var(--surface);transition:all .12s;user-select:none}
 .tag:hover{border-color:var(--orange);color:var(--orange)}
 .tag.on{background:var(--orange-dim);color:var(--orange);border-color:var(--orange-mid);font-weight:500}
 
-/* Input */
 .lbl{font-size:11.5px;color:var(--text-2);display:block;margin-bottom:3px}
-input[type=text]{width:100%;font-size:12.5px;border-radius:var(--r);padding:6px 9px;border:1px solid var(--border-strong);background:var(--surface2);color:var(--text);outline:none;font-family:inherit;transition:border-color .12s}
+input[type=text]{width:100%;min-width:0;font-size:13px;border-radius:var(--r);padding:7px 10px;border:1px solid var(--border-strong);background:var(--surface2);color:var(--text);outline:none;font-family:inherit;transition:border-color .12s}
 input[type=text]:focus{border-color:var(--orange);background:var(--surface);box-shadow:0 0 0 3px rgba(244,114,27,.08)}
 input[type=text]::placeholder{color:var(--text-3)}
-.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.r2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 
-/* Layout cards */
-.lv-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.lv-card{border:1.5px solid var(--border);border-radius:var(--r-lg);padding:10px 8px;cursor:pointer;transition:all .12s;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--surface)}
+.lv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lv-card{border:1.5px solid var(--border);border-radius:var(--r-lg);padding:12px 8px;cursor:pointer;transition:all .12s;display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--surface)}
 .lv-card:hover{border-color:var(--orange-mid)}
 .lv-card.on{border-color:var(--orange);background:var(--orange-dim)}
-.lv-thumb{width:48px;height:48px;border-radius:5px;overflow:hidden;border:1px solid var(--border)}
-.lv-lbl{font-size:10.5px;color:var(--text-2);text-align:center;line-height:1.4}
+.lv-thumb{width:52px;height:52px;border-radius:5px;overflow:hidden;border:1px solid var(--border)}
+.lv-lbl{font-size:11px;color:var(--text-2);text-align:center;line-height:1.4}
 .lv-card.on .lv-lbl{color:var(--orange);font-weight:500}
 
-/* Color mode */
-.cm-row{display:flex;gap:5px}
-.cm-btn{flex:1;padding:6px 8px;border-radius:var(--r);font-size:12px;border:1px solid var(--border-strong);cursor:pointer;background:var(--surface);color:var(--text-2);text-align:center;transition:all .12s;font-family:inherit}
+.cm-row{display:flex;gap:6px}
+.cm-btn{flex:1;padding:7px 8px;border-radius:var(--r);font-size:12px;border:1px solid var(--border-strong);cursor:pointer;background:var(--surface);color:var(--text-2);text-align:center;transition:all .12s;font-family:inherit}
 .cm-btn.on{background:var(--orange-dim);color:var(--orange);border-color:var(--orange);font-weight:500}
 .auto-note{font-size:11.5px;color:var(--text-2);background:var(--orange-dim);border:1px solid var(--orange-mid);border-radius:var(--r);padding:8px 10px;line-height:1.6}
-.swatches{display:flex;flex-wrap:wrap;gap:4px}
-.sw{display:flex;align-items:center;gap:5px;padding:3px 9px 3px 5px;border-radius:99px;font-size:11px;border:1px solid var(--border-strong);cursor:pointer;color:var(--text-2);background:var(--surface);transition:all .12s;user-select:none}
+.swatches{display:flex;flex-wrap:wrap;gap:5px}
+.sw{display:flex;align-items:center;gap:5px;padding:4px 10px 4px 6px;border-radius:99px;font-size:11.5px;border:1px solid var(--border-strong);cursor:pointer;color:var(--text-2);background:var(--surface);transition:all .12s;user-select:none}
 .sw:hover{border-color:var(--orange);color:var(--orange)}
 .sw.on{border-color:var(--orange);background:var(--orange-dim);color:var(--orange);font-weight:500}
-.sw-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sw-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
 
-/* Layer cards */
-.layer{border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;background:var(--surface)}
-.layer-head{display:flex;align-items:center;gap:8px;padding:9px 11px;background:var(--surface2);border-bottom:1px solid var(--border)}
-.layer-badge{width:20px;height:20px;border-radius:5px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0}
-.layer-info{flex:1}
+/* ── Layer system ── */
+.layers-wrap{display:flex;flex-direction:column;gap:8px}
+.drag-handle{display:flex;flex-direction:column;gap:2.5px;padding:4px 3px;cursor:grab;flex-shrink:0;opacity:.35;transition:opacity .12s}
+.drag-handle:hover{opacity:.7}
+.drag-handle:active{cursor:grabbing}
+.drag-handle span{display:block;width:14px;height:1.5px;background:var(--text-2);border-radius:1px}
+.layer-card.dragging{opacity:.4;border:1.5px dashed var(--orange);background:var(--orange-dim)}
+.layer-card.drag-over{border-color:var(--orange);box-shadow:0 0 0 2px var(--orange-dim)}
+
+.layer-card{border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;background:var(--surface)}
+.layer-head{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.layer-badge{min-width:22px;height:22px;border-radius:6px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;padding:0 4px}
+.layer-info{flex:1;min-width:0}
 .layer-name{font-size:12px;font-weight:600;color:var(--text)}
 .layer-sub{font-size:10.5px;color:var(--text-3)}
-.layer-body{padding:9px 11px;display:flex;flex-direction:column;gap:7px}
+.layer-body{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
 
-/* Priority — visual strength buttons */
-.pri-row{display:flex;gap:4px}
-.pri-btn{flex:1;padding:5px 4px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid;font-family:inherit;transition:all .12s;text-align:center;line-height:1.3}
-
-/* 強攻: orange filled */
+/* Priority */
+.pri-row{display:flex;gap:4px;flex-shrink:0}
+.pri-btn{flex:1;padding:5px 3px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid;font-family:inherit;transition:all .12s;text-align:center;line-height:1.3;white-space:nowrap}
 .pri-high{background:var(--surface);border-color:var(--border-strong);color:var(--text-3)}
 .pri-high.on{background:var(--orange);border-color:var(--orange);color:white}
-/* 輔助: orange outline */
 .pri-mid{background:var(--surface);border-color:var(--border-strong);color:var(--text-3)}
 .pri-mid.on{background:var(--orange-dim);border-color:var(--orange);color:var(--orange)}
-/* 低調: gray */
 .pri-low{background:var(--surface);border-color:var(--border-strong);color:var(--text-3)}
 .pri-low.on{background:var(--bg);border-color:var(--border-strong);color:var(--text-2)}
 
-/* Pri preview dots */
-.pri-preview-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+/* Add / Remove buttons */
+.add-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:8px;border-radius:var(--r);border:1.5px dashed var(--border-strong);background:none;color:var(--text-3);font-size:12px;font-family:inherit;cursor:pointer;transition:all .12s}
+.add-btn:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-dim)}
+.remove-btn{display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;border:1px solid var(--border-strong);background:none;color:var(--text-3);cursor:pointer;transition:all .12s;flex-shrink:0;font-size:14px;line-height:1}
+.remove-btn:hover{border-color:var(--red);color:var(--red);background:#fef2f2}
 
-/* Right */
-.out-header{display:flex;align-items:center;justify-content:space-between}
-.layer-flow{display:flex;align-items:center;gap:5px}
-.flow-item{display:flex;align-items:center;gap:3px;font-size:10.5px;color:var(--text-3)}
-.flow-sep{color:var(--border-strong);font-size:11px}
-
-.output{flex:1;min-height:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;font-family:'SF Mono','Fira Code','Menlo',monospace;font-size:11.5px;color:var(--text);line-height:1.85;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
-.output.ph{color:var(--text-3);font-family:inherit;font-size:13px;font-style:italic}
-
-.bot{display:flex;align-items:center;justify-content:space-between}
+/* Output */
+.output-group{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:12px}
+.output-header{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:space-between}
+.output-title{font-size:12px;font-weight:600;color:var(--text)}
+.layer-flow{display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--text-3);flex-wrap:wrap}
+.output-body{padding:16px;font-family:'SF Mono','Fira Code','Menlo',monospace;font-size:12px;color:var(--text);line-height:1.85;white-space:pre-wrap;word-break:break-word;min-height:160px}
+.output-body.ph{color:var(--text-3);font-family:inherit;font-size:13px;font-style:italic;line-height:1.6}
+.output-footer{padding:10px 16px;border-top:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:space-between}
 .cct{font-size:11px;color:var(--text-3)}
 .btns{display:flex;gap:6px}
-.btn{display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--r);font-size:12.5px;font-weight:500;cursor:pointer;border:1px solid var(--border-strong);background:var(--surface);color:var(--text-2);font-family:inherit;transition:all .12s}
+
+.btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--r);font-size:12.5px;font-weight:500;cursor:pointer;border:1px solid var(--border-strong);background:var(--surface);color:var(--text-2);font-family:inherit;transition:all .12s}
 .btn:hover{background:var(--bg)}
-.btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .btn.primary{background:var(--orange);color:white;border-color:var(--orange)}
 .btn.primary:hover{background:#d9620f}
 .btn.success{background:#dcfce7;color:#15803d;border-color:#86efac}
@@ -129,273 +131,154 @@ input[type=text]::placeholder{color:var(--text-3)}
 <body>
 
 <header>
-  <div class="logo">
-    <svg viewBox="0 0 16 16"><path d="M8 2L10.5 7H13.5L11 10L12 14L8 11.5L4 14L5 10L2.5 7H5.5Z"/></svg>
-  </div>
+  <div class="logo"><svg viewBox="0 0 16 16"><path d="M8 2L10.5 7H13.5L11 10L12 14L8 11.5L4 14L5 10L2.5 7H5.5Z"/></svg></div>
   <h1>包框 Prompt 產生器</h1>
   <span class="ver">好食課內部工具</span>
   <div class="spacer"></div>
-  <span class="hint">填寫左側參數 → 複製右側 Prompt → 貼入 ChatGPT 生圖</span>
+  <span class="hint">選完參數 → 複製下方 Prompt → 貼入 ChatGPT</span>
 </header>
 
-<div class="app">
-<div class="left">
+<div class="page">
 
-  <div class="sec">
-    <p class="sl">版型</p>
-    <div class="lv-grid">
-      <div class="lv-card on" onclick="setLayout('top-bottom',this)">
-        <div class="lv-thumb" style="display:flex;flex-direction:column">
-          <div style="background:#00b140;flex:3"></div>
-          <div style="background:#F4721B;flex:2;display:flex;align-items:center;justify-content:center;font-size:7px;color:white;font-weight:700;letter-spacing:.02em">品牌框</div>
+  <!-- 版型 -->
+  <div class="group">
+    <div class="group-header"><span class="group-title">版型與影片區</span></div>
+    <div class="group-body">
+      <div class="sec">
+        <label class="sl">影片與包框配置</label>
+        <div class="lv-grid">
+          <div class="lv-card on" onclick="setLayout('top-bottom',this)">
+            <div class="lv-thumb" style="display:flex;flex-direction:column">
+              <div style="background:#00b140;flex:3"></div>
+              <div style="background:#F4721B;flex:2;display:flex;align-items:center;justify-content:center;font-size:7px;color:white;font-weight:700">品牌框</div>
+            </div>
+            <span class="lv-lbl">上影片 · 下包框</span>
+          </div>
+          <div class="lv-card" onclick="setLayout('left-right',this)">
+            <div class="lv-thumb" style="display:flex;flex-direction:row">
+              <div style="background:#00b140;flex:3"></div>
+              <div style="background:#F4721B;flex:2;display:flex;align-items:center;justify-content:center;font-size:8px;color:white;font-weight:700">品</div>
+            </div>
+            <span class="lv-lbl">左影片 · 右包框</span>
+          </div>
         </div>
-        <span class="lv-lbl">上影片 · 下包框</span>
       </div>
-      <div class="lv-card" onclick="setLayout('left-right',this)">
-        <div class="lv-thumb" style="display:flex;flex-direction:row">
-          <div style="background:#00b140;flex:3"></div>
-          <div style="background:#F4721B;flex:2;display:flex;align-items:center;justify-content:center;font-size:8px;color:white;font-weight:700">品</div>
+      <div class="sec">
+        <label class="sl">影片底色</label>
+        <div class="seg" id="bg-seg">
+          <button class="on" onclick="pick(this,'bgColor','green')">綠幕</button>
+          <button onclick="pick(this,'bgColor','blue')">藍幕</button>
         </div>
-        <span class="lv-lbl">左影片 · 右包框</span>
+      </div>
+      <div class="sec">
+        <label class="sl">區塊交界設計</label>
+        <div class="tags">
+          <span class="tag on" onclick="togTag(this,'borderStyle','柔和弧形切面')">弧形切面</span>
+          <span class="tag" onclick="togTag(this,'borderStyle','斜切流線設計')">斜切流線</span>
+          <span class="tag" onclick="togTag(this,'borderStyle','液態波浪感')">液態波浪</span>
+          <span class="tag" onclick="togTag(this,'borderStyle','局部破窗式重疊')">破窗重疊</span>
+          <span class="tag" onclick="togTag(this,'borderStyle','緞帶弧形包覆感')">緞帶弧形</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="divider"></div>
-
-  <div class="sec">
-    <p class="sl">影片底色</p>
-    <div class="seg" id="bg-seg">
-      <button class="on" onclick="pick(this,'bgColor','green')">綠幕</button>
-      <button onclick="pick(this,'bgColor','blue')">藍幕</button>
-    </div>
-  </div>
-
-  <div class="sec">
-    <p class="sl">區塊交界</p>
-    <div class="tags">
-      <span class="tag on" onclick="togTag(this,'borderStyle','柔和弧形切面')">弧形切面</span>
-      <span class="tag" onclick="togTag(this,'borderStyle','斜切流線設計')">斜切流線</span>
-      <span class="tag" onclick="togTag(this,'borderStyle','液態波浪感')">液態波浪</span>
-      <span class="tag" onclick="togTag(this,'borderStyle','局部破窗式重疊')">破窗重疊</span>
-      <span class="tag" onclick="togTag(this,'borderStyle','緞帶弧形包覆感')">緞帶弧形</span>
-    </div>
-  </div>
-
-  <div class="sec">
-    <p class="sl">整體氛圍</p>
-    <div class="seg" id="vibe-seg">
-      <button class="on" onclick="pick(this,'vibe','品牌')">品牌感</button>
-      <button onclick="pick(this,'vibe','促銷')">強促銷</button>
-      <button onclick="pick(this,'vibe','精品')">精品禮盒</button>
-    </div>
-  </div>
-
-  <div class="sec">
-    <p class="sl">品牌色系</p>
-    <div class="cm-row">
-      <button class="cm-btn on" id="cm-auto" onclick="setColorMode('auto')">依包裝自動判斷</button>
-      <button class="cm-btn" id="cm-custom" onclick="setColorMode('custom')">自訂色系</button>
-    </div>
-    <div id="color-auto-note" class="auto-note">AI 將根據你提供的產品包裝圖，自動判斷主色與輔助色延伸設計整體配色。</div>
-    <div id="color-custom-area" style="display:none;flex-direction:column;gap:6px">
-      <p style="font-size:11.5px;color:var(--text-2)">快選預設色系：</p>
-      <div class="swatches">
-        <div class="sw" onclick="pickSwatch(this,'橘杏蜜桃系：蜜桃杏色、柔和珊瑚橘、暖金色、珍珠白')"><span class="sw-dot" style="background:linear-gradient(135deg,#F5A97A,#F2C97A)"></span>橘杏蜜桃</div>
-        <div class="sw" onclick="pickSwatch(this,'清新綠白系：草綠、黃綠、淺綠白、自然米白')"><span class="sw-dot" style="background:linear-gradient(135deg,#7BC67A,#C8E6A0)"></span>清新綠白</div>
-        <div class="sw" onclick="pickSwatch(this,'深紅金系：深紅、酒紅、暖金、香檳金、珍珠白')"><span class="sw-dot" style="background:linear-gradient(135deg,#8B1A1A,#C9963A)"></span>深紅金系</div>
-        <div class="sw" onclick="pickSwatch(this,'深邃金黑系：深墨、暖金、奶油白')"><span class="sw-dot" style="background:linear-gradient(135deg,#222,#C9963A)"></span>金黑奢華</div>
-        <div class="sw" onclick="pickSwatch(this,'純淨白系：純白、微珍珠光澤、淺冰藍、銀灰')"><span class="sw-dot" style="background:linear-gradient(135deg,#eee,#D0E8F5)"></span>純淨白系</div>
-        <div class="sw" onclick="pickSwatch(this,'莫蘭迪粉系：灰粉、霧玫瑰、米白、淺灰')"><span class="sw-dot" style="background:linear-gradient(135deg,#D4A5A0,#E8DDD5)"></span>莫蘭迪粉</div>
+  <!-- 風格 -->
+  <div class="group">
+    <div class="group-header"><span class="group-title">整體風格</span></div>
+    <div class="group-body">
+      <div class="sec">
+        <label class="sl">氛圍</label>
+        <div class="seg" id="vibe-seg">
+          <button class="on" onclick="pick(this,'vibe','品牌')">品牌感</button>
+          <button onclick="pick(this,'vibe','促銷')">強促銷</button>
+          <button onclick="pick(this,'vibe','精品')">精品禮盒</button>
+        </div>
       </div>
-      <label class="lbl" style="margin-top:2px">或手動填入色系描述</label>
-      <input type="text" id="custom-color" placeholder="例：湖水藍、銀白、淡金色流線" oninput="rebuild()">
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <p class="sl">四層資訊架構</p>
-  <p style="font-size:11px;color:var(--text-3);margin-top:-8px">設定每層的視覺強度，影響 AI 生圖時的排版重量</p>
-
-  <!-- Layer 1 -->
-  <div class="layer">
-    <div class="layer-head">
-      <div class="layer-badge">①</div>
-      <div class="layer-info">
-        <div class="layer-name">優惠鉤子</div>
-        <div class="layer-sub">第一眼抓住人的促銷訊息</div>
-      </div>
-      <div class="pri-row" id="p1-pri" style="width:150px">
-        <button class="pri-btn pri-high on" onclick="setPri(this,'p1','high')">🔴 強攻</button>
-        <button class="pri-btn pri-mid" onclick="setPri(this,'p1','mid')">🟡 輔助</button>
-        <button class="pri-btn pri-low" onclick="setPri(this,'p1','low')">⚪ 低調</button>
-      </div>
-    </div>
-    <div class="layer-body">
-      <div class="seg" id="offer-seg">
-        <button class="on" onclick="pick(this,'offerType','pct')">折扣 %</button>
-        <button onclick="pick(this,'offerType','code')">優惠碼</button>
-        <button onclick="pick(this,'offerType','price')">最低價</button>
-        <button onclick="pick(this,'offerType','none')">不設定</button>
-      </div>
-      <div id="ot-pct" class="r2">
-        <div class="sec"><label class="lbl">折扣文字</label><input type="text" id="pct-num" placeholder="限時85折起" oninput="rebuild()"></div>
-        <div class="sec"><label class="lbl">截止日期（選填）</label><input type="text" id="pct-date" placeholder="只到6/30" oninput="rebuild()"></div>
-      </div>
-      <div id="ot-code" style="display:none" class="sec"><label class="lbl">優惠碼文案</label><input type="text" id="code-text" placeholder="輸入折扣碼LE9享9折" oninput="rebuild()"></div>
-      <div id="ot-price" style="display:none" class="r2">
-        <div class="sec"><label class="lbl">最低價格</label><input type="text" id="price-val" placeholder="最低325元/包" oninput="rebuild()"></div>
-        <div class="sec"><label class="lbl">折扣標（選填）</label><input type="text" id="price-pct" placeholder="下殺41折" oninput="rebuild()"></div>
+      <div class="sec">
+        <label class="sl">品牌色系</label>
+        <div class="cm-row">
+          <button class="cm-btn on" id="cm-auto" onclick="setColorMode('auto')">依包裝自動判斷</button>
+          <button class="cm-btn" id="cm-custom" onclick="setColorMode('custom')">自訂色系</button>
+        </div>
+        <div id="color-auto-note" class="auto-note">AI 將根據你提供的產品包裝圖，自動判斷主色與輔助色延伸設計整體配色。</div>
+        <div id="color-custom-area" style="display:none;flex-direction:column;gap:8px">
+          <p style="font-size:11.5px;color:var(--text-2)">快選預設色系：</p>
+          <div class="swatches">
+            <div class="sw" onclick="pickSwatch(this,'橘杏蜜桃系：蜜桃杏色、柔和珊瑚橘、暖金色、珍珠白')"><span class="sw-dot" style="background:linear-gradient(135deg,#F5A97A,#F2C97A)"></span>橘杏蜜桃</div>
+            <div class="sw" onclick="pickSwatch(this,'清新綠白系：草綠、黃綠、淺綠白、自然米白')"><span class="sw-dot" style="background:linear-gradient(135deg,#7BC67A,#C8E6A0)"></span>清新綠白</div>
+            <div class="sw" onclick="pickSwatch(this,'深紅金系：深紅、酒紅、暖金、香檳金、珍珠白')"><span class="sw-dot" style="background:linear-gradient(135deg,#8B1A1A,#C9963A)"></span>深紅金系</div>
+            <div class="sw" onclick="pickSwatch(this,'深邃金黑系：深墨、暖金、奶油白')"><span class="sw-dot" style="background:linear-gradient(135deg,#222,#C9963A)"></span>金黑奢華</div>
+            <div class="sw" onclick="pickSwatch(this,'純淨白系：純白、微珍珠光澤、淺冰藍、銀灰')"><span class="sw-dot" style="background:linear-gradient(135deg,#eee,#D0E8F5)"></span>純淨白系</div>
+            <div class="sw" onclick="pickSwatch(this,'莫蘭迪粉系：灰粉、霧玫瑰、米白、淺灰')"><span class="sw-dot" style="background:linear-gradient(135deg,#D4A5A0,#E8DDD5)"></span>莫蘭迪粉</div>
+          </div>
+          <div class="sec">
+            <label class="lbl">或手動填入色系描述</label>
+            <input type="text" id="custom-color" placeholder="例：湖水藍、銀白、淡金色流線" oninput="rebuild()">
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Layer 2 -->
-  <div class="layer">
-    <div class="layer-head">
-      <div class="layer-badge">②</div>
-      <div class="layer-info">
-        <div class="layer-name">信任背書</div>
-        <div class="layer-sub">誰推薦、來源、認證</div>
-      </div>
-      <div class="pri-row" id="p2-pri" style="width:150px">
-        <button class="pri-btn pri-high" onclick="setPri(this,'p2','high')">🔴 強攻</button>
-        <button class="pri-btn pri-mid on" onclick="setPri(this,'p2','mid')">🟡 輔助</button>
-        <button class="pri-btn pri-low" onclick="setPri(this,'p2','low')">⚪ 低調</button>
-      </div>
+  <!-- 資訊架構 -->
+  <div class="group">
+    <div class="group-header">
+      <span class="group-title">包框資訊架構</span>
+      <span class="group-sub">可新增、調整順序或移除每個區塊</span>
     </div>
-    <div class="layer-body">
-      <div class="r2">
-        <div class="sec"><label class="lbl">來源 / 推薦者</label><input type="text" id="source" placeholder="好食課" oninput="rebuild()"></div>
-        <div class="sec"><label class="lbl">活動類型</label><input type="text" id="act-type" placeholder="限時團購" oninput="rebuild()"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Layer 3 -->
-  <div class="layer">
-    <div class="layer-head">
-      <div class="layer-badge">③</div>
-      <div class="layer-info">
-        <div class="layer-name">產品識別</div>
-        <div class="layer-sub">你是誰、賣什麼</div>
-      </div>
-      <div class="pri-row" id="p3-pri" style="width:150px">
-        <button class="pri-btn pri-high" onclick="setPri(this,'p3','high')">🔴 強攻</button>
-        <button class="pri-btn pri-mid on" onclick="setPri(this,'p3','mid')">🟡 輔助</button>
-        <button class="pri-btn pri-low" onclick="setPri(this,'p3','low')">⚪ 低調</button>
-      </div>
-    </div>
-    <div class="layer-body">
-      <div class="sec"><label class="lbl">產品名稱</label><input type="text" id="prod" placeholder="娘家大紅麴" oninput="rebuild()"></div>
-    </div>
-  </div>
-
-  <!-- Layer 4 -->
-  <div class="layer">
-    <div class="layer-head">
-      <div class="layer-badge">④</div>
-      <div class="layer-info">
-        <div class="layer-name">購買理由</div>
-        <div class="layer-sub">為什麼要買你</div>
-      </div>
-      <div class="pri-row" id="p4-pri" style="width:150px">
-        <button class="pri-btn pri-high" onclick="setPri(this,'p4','high')">🔴 強攻</button>
-        <button class="pri-btn pri-mid on" onclick="setPri(this,'p4','mid')">🟡 輔助</button>
-        <button class="pri-btn pri-low" onclick="setPri(this,'p4','low')">⚪ 低調</button>
-      </div>
-    </div>
-    <div class="layer-body">
-      <div class="seg" id="reason-seg">
-        <button class="on" onclick="pick(this,'reasonType','slogan')">一句訴求</button>
-        <button onclick="pick(this,'reasonType','list')">條列重點</button>
-        <button onclick="pick(this,'reasonType','both')">兩者都有</button>
-      </div>
-      <div id="rt-slogan" class="sec"><label class="lbl">核心訴求句</label><input type="text" id="slogan" placeholder="有感晶亮水潤" oninput="rebuild()"></div>
-      <div id="rt-list" style="display:none" class="sec">
-        <label class="lbl">前綴句（選填）</label><input type="text" id="list-prefix" placeholder="吃1樣顧3項" oninput="rebuild()">
-        <label class="lbl" style="margin-top:4px">條列重點（頓號分隔）</label>
-        <input type="text" id="list-items" placeholder="調節血糖、調節血脂、延緩衰老" oninput="rebuild()">
-      </div>
-      <div id="rt-both" style="display:none" class="sec">
-        <label class="lbl">核心訴求句</label><input type="text" id="slogan2" placeholder="吃1樣顧3項" oninput="rebuild()">
-        <label class="lbl" style="margin-top:4px">條列補充（頓號分隔）</label>
-        <input type="text" id="list2" placeholder="調節血糖、調節血脂、延緩衰老" oninput="rebuild()">
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- Right -->
-<div class="right">
-  <div class="out-header">
-    <p class="sl" style="margin-bottom:0">生成的 Prompt</p>
-    <div class="layer-flow" id="layer-flow"></div>
-  </div>
-  <div class="output ph" id="output">填寫左側參數，Prompt 即時出現在這裡，複製後直接貼入 ChatGPT 生圖</div>
-  <div class="bot">
-    <span class="cct" id="cct">0 字</span>
-    <div class="btns">
-      <button class="btn" onclick="resetAll()">
-        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>重置
+    <div class="group-body">
+      <div class="layers-wrap" id="layers-wrap"></div>
+      <button class="add-btn" onclick="showAddMenu()">
+        <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        新增資訊區塊
       </button>
-      <button class="btn primary" id="copybtn" onclick="doCopy()">
-        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>複製 Prompt
-      </button>
+      <div id="add-menu" style="display:none;flex-wrap:wrap;gap:5px">
+        <button class="tag" onclick="addLayer('offer')">＋ 優惠鉤子</button>
+        <button class="tag" onclick="addLayer('trust')">＋ 信任背書</button>
+        <button class="tag" onclick="addLayer('product')">＋ 產品識別</button>
+        <button class="tag" onclick="addLayer('reason')">＋ 購買理由</button>
+        <button class="tag" onclick="addLayer('cta')">＋ 行動呼籲</button>
+        <button class="tag" onclick="addLayer('custom')">＋ 自訂文字</button>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Prompt 預覽 -->
+  <div class="output-group">
+    <div class="output-header">
+      <span class="output-title">生成的 Prompt</span>
+      <div class="layer-flow" id="layer-flow"></div>
+    </div>
+    <div class="output-body ph" id="output">新增上方區塊並填入資訊，Prompt 會自動出現在這裡</div>
+    <div class="output-footer">
+      <span class="cct" id="cct">0 字</span>
+      <div class="btns">
+        <button class="btn" onclick="resetAll()">
+          <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>重置
+        </button>
+        <button class="btn primary" id="copybtn" onclick="doCopy()">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2v1"/></svg>複製 Prompt
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-const S={layout:'top-bottom',bgColor:'green',borderStyle:'柔和弧形切面',colorMode:'auto',colorScheme:'',vibe:'品牌',offerType:'pct',reasonType:'slogan',p1:'high',p2:'mid',p3:'mid',p4:'mid'};
+const S={layout:'top-bottom',bgColor:'green',borderStyle:'柔和弧形切面',colorMode:'auto',colorScheme:'',vibe:'品牌'};
+let layers=[];
+let lid=0;
 
-function setColorMode(m){
-  S.colorMode=m;
-  document.getElementById('cm-auto').classList.toggle('on',m==='auto');
-  document.getElementById('cm-custom').classList.toggle('on',m==='custom');
-  document.getElementById('color-auto-note').style.display=m==='auto'?'':'none';
-  const ca=document.getElementById('color-custom-area');
-  ca.style.display=m==='custom'?'flex':'none';
-  if(m==='custom') ca.style.flexDirection='column';
-  rebuild();
-}
-function pickSwatch(el,val){
-  document.querySelectorAll('.sw').forEach(s=>s.classList.remove('on'));
-  el.classList.add('on'); S.colorScheme=val;
-  document.getElementById('custom-color').value=''; rebuild();
-}
-function pick(btn,key,val){
-  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on'); S[key]=val;
-  if(key==='offerType') showOffer(val);
-  if(key==='reasonType') showReason(val);
-  rebuild();
-}
-function togTag(el,key,val){
-  el.parentElement.querySelectorAll('.tag').forEach(t=>t.classList.remove('on'));
-  el.classList.add('on'); S[key]=val; rebuild();
-}
-function setLayout(l,card){
-  document.querySelectorAll('.lv-card').forEach(c=>c.classList.remove('on'));
-  card.classList.add('on'); S.layout=l; rebuild();
-}
-function setPri(btn,key,val){
-  btn.parentElement.querySelectorAll('.pri-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on'); S[key]=val; rebuild();
-}
-function showOffer(t){
-  ['pct','code','price'].forEach(x=>{document.getElementById('ot-'+x).style.display='none';});
-  if(t!=='none') document.getElementById('ot-'+t).style.display=(t==='pct')?'':'flex';
-  if(t==='pct') document.getElementById('ot-pct').style.display='grid';
-}
-function showReason(t){
-  ['slogan','list','both'].forEach(x=>{document.getElementById('rt-'+x).style.display='none';});
-  document.getElementById('rt-'+t).style.display='';
-}
-function v(id){return(document.getElementById(id)||{}).value?.trim()||'';}
+const LAYER_DEF={
+  offer:{name:'優惠鉤子',sub:'第一眼抓住人的促銷訊息',defaultPri:'high'},
+  trust:{name:'信任背書',sub:'誰推薦、來源、認證',defaultPri:'mid'},
+  product:{name:'產品識別',sub:'你是誰、賣什麼',defaultPri:'mid'},
+  reason:{name:'購買理由',sub:'為什麼要買你',defaultPri:'mid'},
+  cta:{name:'行動呼籲',sub:'引導下單的按鈕感文字',defaultPri:'mid'},
+  custom:{name:'自訂區塊',sub:'任何其他文字資訊',defaultPri:'low'},
+};
 
 const PL={high:'【強攻 — 主視覺，一眼最搶眼】',mid:'【輔助 — 清楚明確的次要重點】',low:'【低調 — 小標籤或輔助識別】'};
 const PS={
@@ -405,34 +288,157 @@ const PS={
 };
 const PDOT={high:'🔴',mid:'🟡',low:'⚪'};
 
-function buildColor(){
-  if(S.colorMode==='auto') return '請根據提供的產品包裝圖，自動判斷主色與輔助色，以包裝色為基礎延伸設計整體配色，保持品牌一致性。';
-  const c=v('custom-color');
-  if(c) return `色系：${c}，整體配色以此為基礎延伸設計。`;
-  if(S.colorScheme) return `色系：${S.colorScheme}`;
-  return '請根據提供的產品包裝圖自動判斷配色。';
+function renderLayers(){
+  const wrap=document.getElementById('layers-wrap');
+  wrap.innerHTML='';
+  layers.forEach((l,i)=>{
+    const el=document.createElement('div');
+    el.className='layer-card';
+    el.dataset.id=l.id;
+    el.draggable=true;
+    el.innerHTML=layerHTML(l,i);
+    el.addEventListener('dragstart',onDragStart);
+    el.addEventListener('dragover',onDragOver);
+    el.addEventListener('dragleave',onDragLeave);
+    el.addEventListener('drop',onDrop);
+    el.addEventListener('dragend',onDragEnd);
+    wrap.appendChild(el);
+  });
+  rebuild();
 }
-function buildOffer(){
-  const t=S.offerType; if(t==='none') return null;
-  if(t==='pct'){const n=v('pct-num')||'限時折扣';const d=v('pct-date');return `「${n}」${d?'（截止：'+d+'）':''}`;}
-  if(t==='code') return `「${v('code-text')||'輸入折扣碼享優惠'}」`;
-  if(t==='price'){const p=v('price-val')||'限時優惠價';const pct=v('price-pct');return `「${p}」${pct?'，搭配「'+pct+'」折扣標':''}`;}
+
+function layerHTML(l,i){
+  const def=LAYER_DEF[l.type];
+  const num=i+1;
+  let bodyHTML='';
+  const dragHandle=`<div class="drag-handle" title="拖移調整順序"><span></span><span></span><span></span></div>`;
+
+  if(l.type==='offer'){
+    const st=l.offerType||'pct';
+    bodyHTML=`
+      <div class="seg" id="ot-seg-${l.id}">
+        <button class="${st==='pct'?'on':''}" onclick="setLayerProp(${l.id},'offerType','pct');renderLayers()">折扣 %</button>
+        <button class="${st==='code'?'on':''}" onclick="setLayerProp(${l.id},'offerType','code');renderLayers()">優惠碼</button>
+        <button class="${st==='price'?'on':''}" onclick="setLayerProp(${l.id},'offerType','price');renderLayers()">最低價</button>
+      </div>
+      ${st==='pct'?`<div class="r2">
+        <div class="sec"><label class="lbl">折扣文字</label><input type="text" value="${l.v1||''}" placeholder="限時85折起" oninput="setLayerProp(${l.id},'v1',this.value)"></div>
+        <div class="sec"><label class="lbl">截止日期（選填）</label><input type="text" value="${l.v2||''}" placeholder="只到6/30" oninput="setLayerProp(${l.id},'v2',this.value)"></div>
+      </div>`:''}
+      ${st==='code'?`<div class="sec"><label class="lbl">優惠碼文案</label><input type="text" value="${l.v1||''}" placeholder="輸入折扣碼LE9享9折" oninput="setLayerProp(${l.id},'v1',this.value)"></div>`:''}
+      ${st==='price'?`<div class="r2">
+        <div class="sec"><label class="lbl">最低價格</label><input type="text" value="${l.v1||''}" placeholder="最低325元/包" oninput="setLayerProp(${l.id},'v1',this.value)"></div>
+        <div class="sec"><label class="lbl">折扣標（選填）</label><input type="text" value="${l.v2||''}" placeholder="下殺41折" oninput="setLayerProp(${l.id},'v2',this.value)"></div>
+      </div>`:''}`;
+  } else if(l.type==='trust'){
+    bodyHTML=`<div class="r2">
+      <div class="sec"><label class="lbl">來源 / 推薦者</label><input type="text" value="${l.v1||''}" placeholder="好食課" oninput="setLayerProp(${l.id},'v1',this.value)"></div>
+      <div class="sec"><label class="lbl">活動類型</label><input type="text" value="${l.v2||''}" placeholder="限時團購" oninput="setLayerProp(${l.id},'v2',this.value)"></div>
+    </div>`;
+  } else if(l.type==='product'){
+    bodyHTML=`<div class="sec"><label class="lbl">產品名稱</label><input type="text" value="${l.v1||''}" placeholder="娘家大紅麴" oninput="setLayerProp(${l.id},'v1',this.value)"></div>`;
+  } else if(l.type==='reason'){
+    const rt=l.reasonType||'slogan';
+    bodyHTML=`
+      <div class="seg">
+        <button class="${rt==='slogan'?'on':''}" onclick="setLayerProp(${l.id},'reasonType','slogan');renderLayers()">一句訴求</button>
+        <button class="${rt==='list'?'on':''}" onclick="setLayerProp(${l.id},'reasonType','list');renderLayers()">條列重點</button>
+        <button class="${rt==='both'?'on':''}" onclick="setLayerProp(${l.id},'reasonType','both');renderLayers()">兩者都有</button>
+      </div>
+      ${rt==='slogan'||rt==='both'?`<div class="sec"><label class="lbl">核心訴求句</label><input type="text" value="${l.v1||''}" placeholder="有感晶亮水潤" oninput="setLayerProp(${l.id},'v1',this.value)"></div>`:''}
+      ${rt==='list'?`<div class="sec"><label class="lbl">前綴句（選填）</label><input type="text" value="${l.v3||''}" placeholder="吃1樣顧3項" oninput="setLayerProp(${l.id},'v3',this.value)"></div>`:''}
+      ${rt==='list'||rt==='both'?`<div class="sec" style="margin-top:4px"><label class="lbl">條列重點（頓號分隔）</label><input type="text" value="${l.v2||''}" placeholder="調節血糖、調節血脂、延緩衰老" oninput="setLayerProp(${l.id},'v2',this.value)"></div>`:''}`;
+  } else if(l.type==='cta'){
+    bodyHTML=`<div class="sec"><label class="lbl">行動呼籲文字</label><input type="text" value="${l.v1||''}" placeholder="限時優惠 立即下單" oninput="setLayerProp(${l.id},'v1',this.value)"></div>`;
+  } else if(l.type==='custom'){
+    bodyHTML=`
+      <div class="sec"><label class="lbl">區塊名稱（選填）</label><input type="text" value="${l.v2||''}" placeholder="例：認證標章" oninput="setLayerProp(${l.id},'v2',this.value)"></div>
+      <div class="sec"><label class="lbl">文字內容</label><input type="text" value="${l.v1||''}" placeholder="輸入任何想放入的文字" oninput="setLayerProp(${l.id},'v1',this.value)"></div>`;
+  }
+
+  const pri=l.pri||def.defaultPri;
+  return `
+    <div class="layer-head">
+      ${dragHandle}
+      <div class="layer-badge">${num}</div>
+      <div class="layer-info">
+        <div class="layer-name">${def.name}</div>
+        <div class="layer-sub">${def.sub}</div>
+      </div>
+      <div class="pri-row" style="width:152px">
+        <button class="pri-btn pri-high ${pri==='high'?'on':''}" onclick="setLayerProp(${l.id},'pri','high');renderLayers()">🔴 強攻</button>
+        <button class="pri-btn pri-mid ${pri==='mid'?'on':''}" onclick="setLayerProp(${l.id},'pri','mid');renderLayers()">🟡 輔助</button>
+        <button class="pri-btn pri-low ${pri==='low'?'on':''}" onclick="setLayerProp(${l.id},'pri','low');renderLayers()">⚪ 低調</button>
+      </div>
+      <button class="remove-btn" onclick="removeLayer(${l.id})" title="移除">×</button>
+    </div>
+    <div class="layer-body">${bodyHTML}</div>`;
 }
-function buildReason(){
-  const t=S.reasonType;
-  if(t==='slogan') return{slogan:v('slogan')||null,list:null};
-  if(t==='list'){const i=(v('list-items')||'').split('、').filter(Boolean);return{slogan:v('list-prefix')||null,list:i.length?i:null};}
-  if(t==='both'){const i=(v('list2')||'').split('、').filter(Boolean);return{slogan:v('slogan2')||null,list:i.length?i:null};}
+
+function addLayer(type){
+  layers.push({id:lid++,type,pri:LAYER_DEF[type].defaultPri});
+  document.getElementById('add-menu').style.display='none';
+  renderLayers();
+}
+function removeLayer(id){
+  layers=layers.filter(l=>l.id!==id);
+  renderLayers();
+}
+function setLayerProp(id,key,val){
+  const l=layers.find(l=>l.id===id);
+  if(l) l[key]=val;
+  rebuild();
+}
+function showAddMenu(){
+  const m=document.getElementById('add-menu');
+  m.style.display=m.style.display==='none'?'flex':'none';
+}
+
+function buildLayerText(l,idx){
+  const def=LAYER_DEF[l.type];
+  const pri=l.pri||def.defaultPri;
+  const label=`【第${idx+1}層：${def.name}】${PL[pri]}`;
+
+  if(l.type==='offer'){
+    const t=l.offerType||'pct';
+    let content='';
+    if(t==='pct') content=`「${l.v1||'限時折扣'}」${l.v2?'（截止：'+l.v2+'）':''}`;
+    else if(t==='code') content=`「${l.v1||'輸入折扣碼享優惠'}」`;
+    else if(t==='price') content=`「${l.v1||'限時優惠價'}」${l.v2?'，搭配「'+l.v2+'」折扣標':''}`;
+    return `${label}\n文字內容：${content}\n視覺要求：${PS[pri]}`;
+  }
+  if(l.type==='trust'){
+    return `${label}\n文字內容：「${l.v1||'好食課'}${l.v2||'推薦'}」\n視覺要求：${PS[pri]}，可用徽章、推薦章或識別標籤`;
+  }
+  if(l.type==='product'){
+    return `${label}\n文字內容：「${l.v1||'[產品名稱]'}」\n視覺要求：${PS[pri]}，字體需有品牌感與份量感，可分 2～3 行排版`;
+  }
+  if(l.type==='reason'){
+    const rt=l.reasonType||'slogan';
+    let r=`${label}\n`;
+    if(rt==='slogan'||rt==='both') r+=`核心訴求：「${l.v1||'[訴求文案]'}」\n`;
+    if(rt==='list'&&l.v3) r+=`前綴句：「${l.v3}」\n`;
+    if((rt==='list'||rt==='both')&&l.v2){
+      const items=l.v2.split('、').filter(Boolean);
+      if(items.length) r+=`條列重點：${items.map(x=>'「'+x+'」').join('、')}\n→ 請做成 ${items.length} 個整齊排列的小標籤或條列式設計\n`;
+    }
+    r+=`視覺要求：${PS[pri]}`;
+    return r;
+  }
+  if(l.type==='cta'){
+    return `${label}\n文字內容：「${l.v1||'立即下單'}」\n視覺要求：${PS[pri]}，請做成按鈕式色塊、圓角框或緞帶標籤，明顯但不俗氣`;
+  }
+  if(l.type==='custom'){
+    const name=l.v2?`（${l.v2}）`:'';
+    return `${label}${name}\n文字內容：「${l.v1||'[自訂內容]'}」\n視覺要求：${PS[pri]}`;
+  }
 }
 
 function rebuild(){
   const bg=S.bgColor==='green'?'綠幕（標準色鍵綠 #00B140）':'藍幕（Chroma Key Blue）';
-  const src=v('source')||'好食課'; const act=v('act-type')||'推薦';
-  const prod=v('prod')||'[產品名稱]';
-  const offer=buildOffer(); const reason=buildReason(); const color=buildColor();
   const vibe={'品牌':'乾淨、溫潤、高級、保健食品品牌感','促銷':'強促銷電商感、資訊層次鮮明、折扣視覺衝擊強烈','精品':'精品禮盒感、成熟穩重、專業可信任、高端健康品牌'}[S.vibe];
 
-  let ld='',fz='',en='',pp='',tz='';
+  let ld,fz,en,pp,tz;
   if(S.layout==='top-bottom'){
     ld=`版型：上方約 65% 為影片放置區（${bg}），下方約 35% 為品牌包框與資訊區\n交界設計：「${S.borderStyle}」，嚴禁單純水平直線切割\n延伸效果：下方包框上緣可局部向上延伸 5%～10%，形成包覆層次`;
     fz='上方影片區'; en='可讓下方裝飾元素微微延伸到影片區下緣，但不可大幅侵入';
@@ -445,16 +451,24 @@ function rebuild(){
     tz='右側品牌包框區（由上至下排列）';
   }
 
-  let layers=[];
-  if(offer) layers.push(`【第一層：優惠鉤子】${PL[S.p1]}\n文字內容：${offer}\n視覺要求：${PS[S.p1]}`);
-  layers.push(`【第二層：信任背書】${PL[S.p2]}\n文字內容：「${src}${act}」\n視覺要求：${PS[S.p2]}，可用徽章、推薦章或識別標籤`);
-  layers.push(`【第三層：產品識別】${PL[S.p3]}\n文字內容：「${prod}」\n視覺要求：${PS[S.p3]}，字體需有品牌感與份量感，可分 2～3 行排版`);
-  if(reason&&(reason.slogan||reason.list)){
-    let r=`【第四層：購買理由】${PL[S.p4]}\n`;
-    if(reason.slogan) r+=`核心訴求：「${reason.slogan}」\n`;
-    if(reason.list&&reason.list.length) r+=`條列重點：${reason.list.map(x=>'「'+x+'」').join('、')}\n→ 請做成 ${reason.list.length} 個整齊排列的小標籤或條列式設計`;
-    r+=`\n視覺要求：${PS[S.p4]}`;
-    layers.push(r);
+  let colorDesc;
+  if(S.colorMode==='auto') colorDesc='請根據提供的產品包裝圖，自動判斷主色與輔助色，以包裝色為基礎延伸設計整體配色，保持品牌一致性。';
+  else{
+    const c=(document.getElementById('custom-color')||{}).value?.trim();
+    colorDesc=c?`色系：${c}，整體配色以此為基礎延伸設計。`:S.colorScheme?`色系：${S.colorScheme}`:'請根據提供的產品包裝圖自動判斷配色。';
+  }
+
+  const layerTexts=layers.map((l,i)=>buildLayerText(l,i)).filter(Boolean);
+
+  const out=document.getElementById('output');
+  const flow=document.getElementById('layer-flow');
+
+  if(layers.length===0){
+    out.textContent='新增上方區塊並填入資訊，Prompt 會自動出現在這裡';
+    out.classList.add('ph');
+    document.getElementById('cct').textContent='0 字';
+    flow.innerHTML='';
+    return;
   }
 
   const prompt=`請根據提供的產品圖，生成一張 1:1 正方形保健食品短影音包框素材，適合社群短影音封面與影片包框使用。
@@ -469,7 +483,7 @@ ${ld}
 
 【整體風格】
 氛圍定調：${vibe}
-${color}
+${colorDesc}
 可加入的裝飾：柔和光暈、半透明流線、微微珍珠光澤、弧形底框，整體需乾淨、好閱讀、不雜亂。
 
 【產品安排】
@@ -478,14 +492,14 @@ ${color}
 重要限制：不可改變產品包裝設計、比例、Logo、顏色、外盒圖案與形狀；不可讓產品變形、扭曲、模糊。
 
 【文字安排】
-${tz}，四層資訊架構如下：
+${tz}，資訊架構如下：
 
-${layers.join('\n\n')}
+${layerTexts.join('\n\n')}
 
 【層次效果】
 ${en}
 請讓整體包框有明顯層次感：產品可微微浮出框外、標籤可壓在框邊緣、光暈可跨越區塊邊界。
-視覺閱讀順序需符合上述四層層級的重要程度設定。
+視覺閱讀順序需符合上述各層級的重要程度設定。
 
 【限制條件】
 - 不可改變產品包裝設計、比例、Logo、品牌名稱、顏色
@@ -496,15 +510,44 @@ ${en}
 
 整體畫面需呈現：${vibe}，適合社群短影音封面與影片包框使用。`;
 
-  const out=document.getElementById('output');
-  out.textContent=prompt; out.classList.remove('ph');
+  out.textContent=prompt;
+  out.classList.remove('ph');
   document.getElementById('cct').textContent=prompt.length+' 字';
 
-  const flow=document.getElementById('layer-flow');
-  flow.innerHTML=['①優惠','②背書','③產品','④理由'].map((l,i)=>{
-    const k=['p1','p2','p3','p4'][i];
-    return `<span class="flow-item">${PDOT[S[k]]} <span style="color:var(--text-2)">${l}</span></span>`;
-  }).join('<span class="flow-sep">›</span>');
+  flow.innerHTML=layers.map((l,i)=>{
+    const pri=l.pri||LAYER_DEF[l.type].defaultPri;
+    return `<span>${PDOT[pri]} ${i+1}.${LAYER_DEF[l.type].name}</span>`;
+  }).join('<span style="color:var(--border-strong)"> › </span>');
+}
+
+// Global controls
+function setColorMode(m){
+  S.colorMode=m;
+  document.getElementById('cm-auto').classList.toggle('on',m==='auto');
+  document.getElementById('cm-custom').classList.toggle('on',m==='custom');
+  document.getElementById('color-auto-note').style.display=m==='auto'?'':'none';
+  const ca=document.getElementById('color-custom-area');
+  ca.style.display=m==='custom'?'flex':'none';
+  if(m==='custom') ca.style.flexDirection='column';
+  rebuild();
+}
+function pickSwatch(el,val){
+  document.querySelectorAll('.sw').forEach(s=>s.classList.remove('on'));
+  el.classList.add('on'); S.colorScheme=val;
+  const cc=document.getElementById('custom-color'); if(cc) cc.value='';
+  rebuild();
+}
+function pick(btn,key,val){
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); S[key]=val; rebuild();
+}
+function togTag(el,key,val){
+  el.parentElement.querySelectorAll('.tag').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on'); S[key]=val; rebuild();
+}
+function setLayout(l,card){
+  document.querySelectorAll('.lv-card').forEach(c=>c.classList.remove('on'));
+  card.classList.add('on'); S.layout=l; rebuild();
 }
 
 function doCopy(){
@@ -522,18 +565,50 @@ function doCopy(){
 }
 
 function resetAll(){
-  ['pct-num','pct-date','code-text','price-val','price-pct','source','act-type','prod','slogan','list-items','list-prefix','slogan2','list2','custom-color'].forEach(id=>{const el=document.getElementById(id);if(el) el.value='';});
+  layers=[]; lid=0;
+  renderLayers();
   document.querySelectorAll('.sw').forEach(s=>s.classList.remove('on'));
   S.colorScheme='';
-  const out=document.getElementById('output');
-  out.textContent='填寫左側參數，Prompt 即時出現在這裡，複製後直接貼入 ChatGPT 生圖';
-  out.classList.add('ph');
-  document.getElementById('cct').textContent='0 字';
-  document.getElementById('layer-flow').innerHTML='';
+  const cc=document.getElementById('custom-color'); if(cc) cc.value='';
 }
 
+// Drag and drop
+let dragSrcId=null;
+
+function onDragStart(e){
+  dragSrcId=parseInt(this.dataset.id);
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',dragSrcId);
+}
+function onDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  if(parseInt(this.dataset.id)!==dragSrcId) this.classList.add('drag-over');
+}
+function onDragLeave(){
+  this.classList.remove('drag-over');
+}
+function onDrop(e){
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  const targetId=parseInt(this.dataset.id);
+  if(targetId===dragSrcId) return;
+  const srcIdx=layers.findIndex(l=>l.id===dragSrcId);
+  const tgtIdx=layers.findIndex(l=>l.id===targetId);
+  const [moved]=layers.splice(srcIdx,1);
+  layers.splice(tgtIdx,0,moved);
+  renderLayers();
+}
+function onDragEnd(){
+  this.classList.remove('dragging');
+  document.querySelectorAll('.layer-card').forEach(c=>c.classList.remove('drag-over'));
+  dragSrcId=null;
+}
+
+// Init with default layers
 setColorMode('auto');
-rebuild();
+['offer','trust','product','reason'].forEach(t=>addLayer(t));
 </script>
 </body>
 </html>
