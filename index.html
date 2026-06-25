@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>包框 Prompt 產生器</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.20);
+    --text: #1a1a18;
+    --text-2: #5a5a54;
+    --text-3: #9a9a90;
+    --accent: #2d5a3d;
+    --accent-light: #e8f2ec;
+    --amber: #92540a;
+    --amber-light: #fef3e2;
+    --red: #991b1b;
+    --red-light: #fef2f2;
+    --blue: #1e3a5f;
+    --blue-light: #eff6ff;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .logo {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  header h1 { font-size: 15px; font-weight: 600; color: var(--text); }
+  header p { font-size: 12px; color: var(--text-3); margin-left: auto; }
+
+  .container {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 0;
+    height: calc(100vh - 57px);
+  }
+
+  .panel-left {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .panel-right {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 14px;
+    background: var(--bg);
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .sec { display: flex; flex-direction: column; gap: 6px; }
+
+  .divider { height: 1px; background: var(--border); }
+
+  /* Seg control */
+  .seg {
+    display: flex;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface2);
+  }
+  .seg button {
+    flex: 1; padding: 6px 4px; font-size: 12px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-2); transition: all .15s; line-height: 1.3;
+    font-family: inherit;
+  }
+  .seg button.on {
+    background: var(--surface); color: var(--text);
+    font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    border-radius: calc(var(--radius) - 1px);
+    margin: 2px;
+  }
+
+  /* Tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag {
+    padding: 4px 10px; border-radius: 99px; font-size: 11.5px;
+    border: 1px solid var(--border-strong); cursor: pointer;
+    color: var(--text-2); background: var(--surface);
+    transition: all .15s; user-select: none;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .tag.on {
+    background: var(--accent-light); color: var(--accent);
+    border-color: var(--accent); font-weight: 500;
+  }
+
+  /* Inputs */
+  label.lbl { font-size: 12px; color: var(--text-2); display: block; margin-bottom: 3px; }
+  input[type=text] {
+    width: 100%; font-size: 13px; border-radius: var(--radius);
+    padding: 7px 10px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface2);
+    color: var(--text); outline: none;
+    font-family: inherit;
+    transition: border-color .15s;
+  }
+  input[type=text]:focus { border-color: var(--accent); background: var(--surface); }
+  input[type=text]::placeholder { color: var(--text-3); }
+
+  .r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* Layout cards */
+  .lv-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lv-card {
+    border: 1px solid var(--border-strong); border-radius: var(--radius-lg);
+    padding: 8px; cursor: pointer; transition: all .15s;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: var(--surface);
+  }
+  .lv-card:hover { border-color: var(--accent); }
+  .lv-card.on { border-color: var(--accent); background: var(--accent-light); }
+  .lv-thumb {
+    width: 52px; height: 52px; border-radius: 6px;
+    overflow: hidden; border: 1px solid var(--border);
+  }
+  .lv-lbl { font-size: 10px; color: var(--text-2); text-align: center; line-height: 1.4; }
+  .lv-card.on .lv-lbl { color: var(--accent); font-weight: 500; }
+
+  /* Color mode */
+  .color-mode-row { display: flex; gap: 6px; }
+  .cm-btn {
+    flex: 1; padding: 7px 8px; border-radius: var(--radius); font-size: 12px;
+    border: 1px solid var(--border-strong); cursor: pointer;
+    background: var(--surface); color: var(--text-2);
+    text-align: center; transition: all .15s; user-select: none; font-family: inherit;
+  }
+  .cm-btn.on { background: var(--accent-light); color: var(--accent); border-color: var(--accent); font-weight: 500; }
+  .color-auto-note {
+    font-size: 11.5px; color: var(--text-2);
+    background: var(--accent-light); border-radius: var(--radius);
+    padding: 8px 10px; line-height: 1.6; border: 1px solid rgba(45,90,61,.15);
+  }
+  .preset-swatches { display: flex; flex-wrap: wrap; gap: 5px; }
+  .swatch {
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 9px 4px 6px; border-radius: 99px; font-size: 11.5px;
+    border: 1px solid var(--border-strong); cursor: pointer;
+    color: var(--text-2); background: var(--surface); transition: all .15s; user-select: none;
+  }
+  .swatch:hover { border-color: var(--accent); color: var(--accent); }
+  .swatch.on { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 500; }
+  .swatch-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Layer cards */
+  .layer-card {
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 10px 12px; display: flex; flex-direction: column; gap: 7px;
+    background: var(--surface);
+  }
+  .layer-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .layer-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--surface2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600; color: var(--text-2); flex-shrink: 0;
+  }
+  .layer-meta { display: flex; flex-direction: column; gap: 1px; }
+  .layer-type { font-size: 12px; font-weight: 600; color: var(--text); }
+  .layer-hint { font-size: 10.5px; color: var(--text-3); }
+
+  /* Priority badges */
+  .pri-group { display: flex; gap: 4px; }
+  .pb {
+    font-size: 10px; padding: 2px 7px; border-radius: 99px;
+    border: 1px solid; cursor: pointer; user-select: none;
+    font-family: inherit; background: none;
+    transition: all .15s;
+  }
+  .pb-high { color: var(--amber); border-color: #f59e0b; }
+  .pb-high.on { background: var(--amber-light); font-weight: 600; }
+  .pb-mid { color: var(--blue); border-color: #3b82f6; }
+  .pb-mid.on { background: var(--blue-light); font-weight: 600; }
+  .pb-low { color: var(--text-3); border-color: var(--border-strong); }
+  .pb-low.on { background: var(--surface2); font-weight: 600; }
+
+  /* Right panel */
+  .output-header {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .priority-preview { display: flex; gap: 6px; align-items: center; font-size: 10.5px; }
+
+  .output-box {
+    flex: 1; background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px; font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px; color: var(--text); line-height: 1.8;
+    overflow-y: auto; white-space: pre-wrap; word-break: break-word;
+    min-height: 0;
+  }
+  .output-box.empty { color: var(--text-3); font-family: inherit; font-style: italic; }
+
+  .bottom-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .char-count { font-size: 11px; color: var(--text-3); }
+
+  .btn-group { display: flex; gap: 6px; }
+  .btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 7px 14px; border-radius: var(--radius); font-size: 12.5px;
+    font-weight: 500; cursor: pointer; border: 1px solid var(--border-strong);
+    background: var(--surface); color: var(--text);
+    transition: all .15s; font-family: inherit;
+  }
+  .btn:hover { background: var(--surface2); }
+  .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .btn.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn.primary:hover { background: #234a31; }
+  .btn.success { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+  .btn.ghost { border-color: var(--border); color: var(--text-2); }
+  .btn.ghost:hover { background: var(--surface2); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">P</div>
+  <h1>包框 Prompt 產生器</h1>
+  <p>保健食品短影音包框工具</p>
+</header>
+
+<div class="container">
+<div class="panel-left">
+
+  <div class="sec">
+    <p class="section-label">版型</p>
+    <div class="lv-wrap" id="layout-wrap">
+      <div class="lv-card on" data-l="top-bottom" onclick="setLayout('top-bottom',this)">
+        <div class="lv-thumb" style="display:flex;flex-direction:column">
+          <div style="background:#00b140;flex:3"></div>
+          <div style="background:#d4a857;flex:2;display:flex;align-items:center;justify-content:center;font-size:7px;color:#5a3000;font-weight:600">品牌框</div>
+        </div>
+        <span class="lv-lbl">上影片<br>下包框</span>
+      </div>
+      <div class="lv-card" data-l="left-right" onclick="setLayout('left-right',this)">
+        <div class="lv-thumb" style="display:flex;flex-direction:row">
+          <div style="background:#00b140;flex:3"></div>
+          <div style="background:#d4a857;flex:2;display:flex;align-items:center;justify-content:center;font-size:7px;color:#5a3000;font-weight:600">品</div>
+        </div>
+        <span class="lv-lbl">左影片<br>右包框</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sec">
+    <p class="section-label">影片區底色</p>
+    <div class="seg" id="bg-seg">
+      <button class="on" onclick="pick(this,'bgColor','green')">綠幕</button>
+      <button onclick="pick(this,'bgColor','blue')">藍幕</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="section-label">區塊交界設計</p>
+    <div class="tags" id="border-tags">
+      <span class="tag on" onclick="togTag(this,'borderStyle','柔和弧形切面')">弧形切面</span>
+      <span class="tag" onclick="togTag(this,'borderStyle','斜切流線設計')">斜切流線</span>
+      <span class="tag" onclick="togTag(this,'borderStyle','液態波浪感')">液態波浪</span>
+      <span class="tag" onclick="togTag(this,'borderStyle','局部破窗式重疊')">破窗重疊</span>
+      <span class="tag" onclick="togTag(this,'borderStyle','緞帶弧形包覆感')">緞帶弧形</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sec">
+    <p class="section-label">品牌色系</p>
+    <div class="color-mode-row">
+      <button class="cm-btn on" id="cm-auto" onclick="setColorMode('auto')">依包裝自動判斷</button>
+      <button class="cm-btn" id="cm-custom" onclick="setColorMode('custom')">自訂色系</button>
+    </div>
+    <div id="color-auto-note" class="color-auto-note">
+      AI 將根據提供的產品包裝圖，自動判斷主色與輔助色延伸設計整體配色。
+    </div>
+    <div id="color-custom-area" style="display:none;flex-direction:column;gap:7px">
+      <p style="font-size:11.5px;color:var(--text-2)">從預設色系快選：</p>
+      <div class="preset-swatches">
+        <div class="swatch" onclick="pickSwatch(this,'橘杏蜜桃系：蜜桃杏色、柔和珊瑚橘、暖金色、珍珠白')">
+          <span class="swatch-dot" style="background:linear-gradient(135deg,#F5A97A,#F2C97A)"></span>橘杏蜜桃
+        </div>
+        <div class="swatch" onclick="pickSwatch(this,'清新綠白系：草綠、黃綠、淺綠白、自然米白')">
+          <span class="swatch-dot" style="background:linear-gradient(135deg,#7BC67A,#C8E6A0)"></span>清新綠白
+        </div>
+        <div class="swatch" onclick="pickSwatch(this,'深紅金系：深紅色、酒紅色、暖金色、香檳金、珍珠白')">
+          <span class="swatch-dot" style="background:linear-gradient(135deg,#8B1A1A,#C9963A)"></span>深紅金系
+        </div>
+        <div class="swatch" onclick="pickSwatch(this,'深邃金黑系：深墨色、暖金色、奶油白')">
+          <span class="swatch-dot" style="background:linear-gradient(135deg,#222,#C9963A)"></span>金黑奢華
+        </div>
+        <div class="swatch" onclick="pickSwatch(this,'純淨白系：純白、微珍珠光澤、淺冰藍、銀灰')">
+          <span class="swatch-dot" style="background:linear-gradient(135deg,#f0f0f0,#D0E8F5)"></span>純淨白系
+        </div>
+        <div class="swatch" onclick="pickSwatch(this,'莫蘭迪粉系：灰粉、霧玫瑰、米白、淺灰')">
+          <span class="swatch-dot" style="background:linear-gradient(135deg,#D4A5A0,#E8DDD5)"></span>莫蘭迪粉
+        </div>
+      </div>
+      <label class="lbl" style="margin-top:2px">或手動描述色系（選填）</label>
+      <input type="text" id="custom-color-input" placeholder="例：湖水藍、銀白、淡金色流線" oninput="rebuild()">
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="section-label">整體氛圍</p>
+    <div class="seg" id="vibe-seg">
+      <button class="on" onclick="pick(this,'vibe','品牌')">品牌感</button>
+      <button onclick="pick(this,'vibe','促銷')">強促銷</button>
+      <button onclick="pick(this,'vibe','精品')">精品禮盒</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="section-label">四層資訊架構</p>
+
+  <!-- Layer 1 -->
+  <div class="layer-card">
+    <div class="layer-head">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div class="layer-num">①</div>
+        <div class="layer-meta">
+          <div class="layer-type">優惠鉤子</div>
+          <div class="layer-hint">第一眼抓住人的促銷訊息</div>
+        </div>
+      </div>
+      <div class="pri-group" id="p1-pri">
+        <button class="pb pb-high on" onclick="setPri(this,'p1','high')">超大</button>
+        <button class="pb pb-mid" onclick="setPri(this,'p1','mid')">醒目</button>
+        <button class="pb pb-low" onclick="setPri(this,'p1','low')">小標</button>
+      </div>
+    </div>
+    <div class="seg" id="offer-seg">
+      <button class="on" onclick="pick(this,'offerType','pct')">折扣%</button>
+      <button onclick="pick(this,'offerType','code')">優惠碼</button>
+      <button onclick="pick(this,'offerType','price')">最低價</button>
+      <button onclick="pick(this,'offerType','none')">不設定</button>
+    </div>
+    <div id="ot-pct" class="r2">
+      <div class="sec"><label class="lbl">折扣文字</label><input type="text" id="pct-num" placeholder="限時85折起" oninput="rebuild()"></div>
+      <div class="sec"><label class="lbl">截止日期（選填）</label><input type="text" id="pct-date" placeholder="只到6/30" oninput="rebuild()"></div>
+    </div>
+    <div id="ot-code" class="sec" style="display:none"><label class="lbl">優惠碼文案</label><input type="text" id="code-text" placeholder="輸入折扣碼LE9享9折" oninput="rebuild()"></div>
+    <div id="ot-price" class="sec" style="display:none">
+      <div class="r2">
+        <div class="sec"><label class="lbl">最低價格</label><input type="text" id="price-val" placeholder="最低325元/包" oninput="rebuild()"></div>
+        <div class="sec"><label class="lbl">折扣標（選填）</label><input type="text" id="price-pct" placeholder="下殺41折" oninput="rebuild()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 2 -->
+  <div class="layer-card">
+    <div class="layer-head">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div class="layer-num">②</div>
+        <div class="layer-meta">
+          <div class="layer-type">信任背書</div>
+          <div class="layer-hint">誰推薦、來源、認證</div>
+        </div>
+      </div>
+      <div class="pri-group" id="p2-pri">
+        <button class="pb pb-high" onclick="setPri(this,'p2','high')">超大</button>
+        <button class="pb pb-mid on" onclick="setPri(this,'p2','mid')">醒目</button>
+        <button class="pb pb-low" onclick="setPri(this,'p2','low')">小標</button>
+      </div>
+    </div>
+    <div class="r2">
+      <div class="sec"><label class="lbl">來源 / 推薦者</label><input type="text" id="source" placeholder="好食課" oninput="rebuild()"></div>
+      <div class="sec"><label class="lbl">活動類型</label><input type="text" id="act-type" placeholder="限時團購" oninput="rebuild()"></div>
+    </div>
+  </div>
+
+  <!-- Layer 3 -->
+  <div class="layer-card">
+    <div class="layer-head">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div class="layer-num">③</div>
+        <div class="layer-meta">
+          <div class="layer-type">產品識別</div>
+          <div class="layer-hint">你是誰、賣什麼</div>
+        </div>
+      </div>
+      <div class="pri-group" id="p3-pri">
+        <button class="pb pb-high" onclick="setPri(this,'p3','high')">超大</button>
+        <button class="pb pb-mid on" onclick="setPri(this,'p3','mid')">醒目</button>
+        <button class="pb pb-low" onclick="setPri(this,'p3','low')">小標</button>
+      </div>
+    </div>
+    <div class="sec"><label class="lbl">產品名稱</label><input type="text" id="prod" placeholder="娘家大紅麴" oninput="rebuild()"></div>
+  </div>
+
+  <!-- Layer 4 -->
+  <div class="layer-card">
+    <div class="layer-head">
+      <div style="display:flex;align-items:center;gap:7px">
+        <div class="layer-num">④</div>
+        <div class="layer-meta">
+          <div class="layer-type">購買理由</div>
+          <div class="layer-hint">為什麼要買你</div>
+        </div>
+      </div>
+      <div class="pri-group" id="p4-pri">
+        <button class="pb pb-high" onclick="setPri(this,'p4','high')">超大</button>
+        <button class="pb pb-mid on" onclick="setPri(this,'p4','mid')">醒目</button>
+        <button class="pb pb-low" onclick="setPri(this,'p4','low')">小標</button>
+      </div>
+    </div>
+    <div class="seg" id="reason-seg">
+      <button class="on" onclick="pick(this,'reasonType','slogan')">一句訴求</button>
+      <button onclick="pick(this,'reasonType','list')">條列重點</button>
+      <button onclick="pick(this,'reasonType','both')">兩者都有</button>
+    </div>
+    <div id="rt-slogan" class="sec"><label class="lbl">核心訴求句</label><input type="text" id="slogan" placeholder="有感晶亮水潤" oninput="rebuild()"></div>
+    <div id="rt-list" class="sec" style="display:none">
+      <label class="lbl">前綴句（選填）</label><input type="text" id="list-prefix" placeholder="吃1樣顧3項" oninput="rebuild()">
+      <label class="lbl" style="margin-top:4px">條列重點（頓號分隔）</label>
+      <input type="text" id="list-items" placeholder="調節血糖、調節血脂、延緩衰老" oninput="rebuild()">
+    </div>
+    <div id="rt-both" class="sec" style="display:none">
+      <label class="lbl">核心訴求句</label><input type="text" id="slogan2" placeholder="吃1樣顧3項" oninput="rebuild()">
+      <label class="lbl" style="margin-top:4px">條列補充（頓號分隔）</label>
+      <input type="text" id="list2" placeholder="調節血糖、調節血脂、延緩衰老" oninput="rebuild()">
+    </div>
+  </div>
+
+</div>
+
+<!-- Right panel -->
+<div class="panel-right">
+  <div class="output-header">
+    <p class="section-label" style="margin-bottom:0">生成的 Prompt</p>
+    <div class="priority-preview" id="priority-preview"></div>
+  </div>
+  <div class="output-box empty" id="output">填寫左側參數，prompt 即時生成在這裡</div>
+  <div class="bottom-bar">
+    <span class="char-count" id="cct">0 字</span>
+    <div class="btn-group">
+      <button class="btn ghost" onclick="resetAll()">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+        重置
+      </button>
+      <button class="btn primary" id="copybtn" onclick="doCopy()">
+        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        複製 Prompt
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const S = {
+  layout:'top-bottom', bgColor:'green', borderStyle:'柔和弧形切面',
+  colorMode:'auto', colorScheme:'',
+  vibe:'品牌', offerType:'pct', reasonType:'slogan',
+  p1:'high', p2:'mid', p3:'mid', p4:'mid'
+};
+
+function setColorMode(mode) {
+  S.colorMode = mode;
+  document.getElementById('cm-auto').classList.toggle('on', mode==='auto');
+  document.getElementById('cm-custom').classList.toggle('on', mode==='custom');
+  document.getElementById('color-auto-note').style.display = mode==='auto' ? '' : 'none';
+  const ca = document.getElementById('color-custom-area');
+  ca.style.display = mode==='custom' ? 'flex' : 'none';
+  ca.style.flexDirection = 'column';
+  rebuild();
+}
+
+function pickSwatch(el, val) {
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('on'));
+  el.classList.add('on');
+  S.colorScheme = val;
+  document.getElementById('custom-color-input').value = '';
+  rebuild();
+}
+
+function pick(btn, key, val) {
+  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); S[key] = val;
+  if (key==='offerType') showOffer(val);
+  if (key==='reasonType') showReason(val);
+  rebuild();
+}
+
+function togTag(el, key, val) {
+  el.parentElement.querySelectorAll('.tag').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on'); S[key] = val; rebuild();
+}
+
+function setLayout(l, card) {
+  document.querySelectorAll('.lv-card').forEach(c=>c.classList.remove('on'));
+  card.classList.add('on'); S.layout = l; rebuild();
+}
+
+function setPri(btn, key, val) {
+  btn.parentElement.querySelectorAll('.pb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); S[key] = val; rebuild();
+}
+
+function showOffer(t) {
+  ['pct','code','price'].forEach(x=>{ document.getElementById('ot-'+x).style.display='none'; });
+  if (t!=='none') document.getElementById('ot-'+t).style.display = t==='pct' ? '' : 'flex';
+  if (t==='pct') document.getElementById('ot-pct').style.display = '';
+}
+
+function showReason(t) {
+  ['slogan','list','both'].forEach(x=>{ document.getElementById('rt-'+x).style.display='none'; });
+  document.getElementById('rt-'+t).style.display = '';
+}
+
+function v(id) { return (document.getElementById(id)||{}).value?.trim()||''; }
+
+const PRI_LABEL = { high:'【超大主視覺，一眼就看到】', mid:'【醒目重點，明確層級】', low:'【小標/輔助標籤呈現】' };
+const PRI_STYLE = {
+  high:'請做成整體畫面最醒目的主視覺之一，超大字體、高對比色塊或特效設計，讓人一眼無法忽視',
+  mid:'請做成清楚醒目的重點資訊，有明確視覺層級，可使用膠囊框、色塊卡片或標籤設計',
+  low:'請以小型標籤、徽章、膠囊框或細緻識別章呈現，輔助而不搶主角'
+};
+
+function buildColorDesc() {
+  if (S.colorMode==='auto') return '請根據提供的產品包裝圖，自動判斷主色與輔助色，以包裝色為基礎延伸設計整體配色，保持品牌一致性。';
+  const custom = v('custom-color-input');
+  if (custom) return `色系：${custom}，整體配色以此為基礎延伸設計。`;
+  if (S.colorScheme) return `色系：${S.colorScheme}`;
+  return '請根據提供的產品包裝圖自動判斷配色。';
+}
+
+function buildOffer() {
+  const t = S.offerType;
+  if (t==='none') return null;
+  if (t==='pct') { const n=v('pct-num')||'限時折扣'; const d=v('pct-date'); return `「${n}」${d?'（截止：'+d+'）':''}`; }
+  if (t==='code') return `「${v('code-text')||'輸入折扣碼享優惠'}」`;
+  if (t==='price') { const p=v('price-val')||'限時優惠價'; const pct=v('price-pct'); return `「${p}」${pct?'，搭配「'+pct+'」折扣標':''}`; }
+}
+
+function buildReason() {
+  const t = S.reasonType;
+  if (t==='slogan') return { slogan: v('slogan')||null, list: null };
+  if (t==='list') { const items=(v('list-items')||'').split('、').filter(Boolean); return { slogan: v('list-prefix')||null, list: items.length?items:null }; }
+  if (t==='both') { const items=(v('list2')||'').split('、').filter(Boolean); return { slogan: v('slogan2')||null, list: items.length?items:null }; }
+}
+
+function rebuild() {
+  const bgLabel = S.bgColor==='green' ? '綠幕（標準色鍵綠 #00B140）' : '藍幕（Chroma Key Blue）';
+  const source = v('source')||'好食課'; const act = v('act-type')||'推薦';
+  const prod = v('prod')||'[產品名稱]';
+  const offer = buildOffer(); const reason = buildReason();
+  const colorDesc = buildColorDesc();
+
+  let layoutDesc='', filmZone='', extendNote='', productPos='', textZone='';
+  if (S.layout==='top-bottom') {
+    layoutDesc = `版型：上方約 65% 為影片放置區（${bgLabel}），下方約 35% 為品牌包框與資訊區\n交界設計：「${S.borderStyle}」，嚴禁單純水平直線切割\n延伸效果：下方包框上緣可局部向上延伸到影片區下緣 5%～10%，形成包覆層次`;
+    filmZone='上方影片區'; extendNote='可讓下方裝飾元素微微延伸到影片區下緣，但不可大幅侵入';
+    productPos='下方包框右側或右下方，可微微向上浮出包框形成破窗效果';
+    textZone='下方品牌包框區（由上至下排列）';
+  } else {
+    layoutDesc = `版型：左側約 65% 為影片放置區（${bgLabel}），右側約 35% 為品牌包框與資訊區\n交界設計：「${S.borderStyle}」，嚴禁單純垂直直線切割\n延伸效果：右側包框左緣可局部向左延伸到影片區邊緣 5%～10%，形成包覆層次`;
+    filmZone='左側影片區'; extendNote='可讓右側裝飾元素微微延伸到左側邊界，但不可大幅侵入';
+    productPos='右側包框下方偏中間或右下位置，可微微向左浮出包框形成破窗效果';
+    textZone='右側品牌包框區（由上至下排列）';
+  }
+
+  const vibeDesc = { '品牌':'乾淨、溫潤、高級、保健食品品牌感', '促銷':'強促銷電商感、資訊層次鮮明、折扣視覺衝擊強烈', '精品':'精品禮盒感、成熟穩重、專業可信任、高端健康品牌' }[S.vibe];
+
+  let layers = [];
+  if (offer) layers.push(`【第一層：優惠鉤子】${PRI_LABEL[S.p1]}\n文字內容：${offer}\n視覺要求：${PRI_STYLE[S.p1]}`);
+  layers.push(`【第二層：信任背書】${PRI_LABEL[S.p2]}\n文字內容：「${source}${act}」\n視覺要求：${PRI_STYLE[S.p2]}，可用徽章、推薦章或識別標籤`);
+  layers.push(`【第三層：產品識別】${PRI_LABEL[S.p3]}\n文字內容：「${prod}」\n視覺要求：${PRI_STYLE[S.p3]}，字體需有品牌感與份量感，可分 2～3 行排版`);
+  if (reason && (reason.slogan||reason.list)) {
+    let r4 = `【第四層：購買理由】${PRI_LABEL[S.p4]}\n`;
+    if (reason.slogan) r4 += `核心訴求：「${reason.slogan}」\n`;
+    if (reason.list && reason.list.length) r4 += `條列重點：${reason.list.map(x=>'「'+x+'」').join('、')}\n→ 請做成 ${reason.list.length} 個整齊排列的小標籤、圓角卡片或條列式設計`;
+    r4 += `\n視覺要求：${PRI_STYLE[S.p4]}`;
+    layers.push(r4);
+  }
+
+  const prompt = `請根據提供的產品圖，生成一張 1:1 正方形保健食品短影音包框素材，適合社群短影音封面與影片包框使用。
+
+【畫面版型】
+畫面比例：1:1 正方形
+${layoutDesc}
+
+【${filmZone}要求】
+請保留大面積乾淨空間，使用${bgLabel}作為底色，方便後製去背使用。
+嚴禁出現：複雜紋理、強烈陰影、明顯漸層、過多光點、雜訊、透明光效干擾。
+
+【整體風格】
+氛圍定調：${vibeDesc}
+${colorDesc}
+可加入的裝飾：柔和光暈、半透明流線、微微珍珠光澤、弧形底框，整體需乾淨、好閱讀、不雜亂。
+
+【產品安排】
+以提供的產品圖作為唯一外觀參考，產品放在${productPos}。
+產品需完整清楚、立體明確，可加高級感投影或底部光暈。
+重要限制：不可改變產品包裝設計、比例、Logo、顏色、外盒圖案與形狀；不可讓產品變形、扭曲、模糊。
+
+【文字安排】
+${textZone}，四層資訊架構如下：
+
+${layers.join('\n\n')}
+
+【層次效果】
+${extendNote}
+請讓整體包框有明顯層次感：產品可微微浮出框外、標籤可壓在框邊緣、光暈可跨越區塊邊界。
+視覺閱讀順序需符合上述四層層級的重要程度設定。
+
+【限制條件】
+- 不可改變產品包裝設計、比例、Logo、品牌名稱、顏色
+- 不可讓產品變形、扭曲、壓扁、模糊
+- 不可新增未列出的文字
+- 所有文字必須為正確繁體中文，不可出現錯字、亂碼
+- 影片區不要有複雜紋理、雜訊或透明漸層
+
+整體畫面需呈現：${vibeDesc}，適合社群短影音封面與影片包框使用。`;
+
+  const out = document.getElementById('output');
+  out.textContent = prompt;
+  out.classList.remove('empty');
+  document.getElementById('cct').textContent = prompt.length + ' 字';
+
+  const pp = document.getElementById('priority-preview');
+  const colors = { high:'#92540a', mid:'#1e3a5f', low:'#9a9a90' };
+  const labels = { high:'超大', mid:'醒目', low:'小' };
+  pp.innerHTML = ['①優惠','②背書','③產品','④理由'].map((l,i) => {
+    const k = ['p1','p2','p3','p4'][i];
+    return `<span style="color:${colors[S[k]]};font-size:10.5px">${l}[${labels[S[k]]}]</span>`;
+  }).join('<span style="color:var(--text-3);font-size:10px"> › </span>');
+}
+
+function doCopy() {
+  const out = document.getElementById('output');
+  if (out.classList.contains('empty')) return;
+  navigator.clipboard.writeText(out.textContent).then(() => {
+    const btn = document.getElementById('copybtn');
+    btn.classList.remove('primary'); btn.classList.add('success');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="20 6 9 17 4 12"/></svg> 已複製！`;
+    setTimeout(() => {
+      btn.classList.remove('success'); btn.classList.add('primary');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 複製 Prompt`;
+    }, 2000);
+  });
+}
+
+function resetAll() {
+  ['pct-num','pct-date','code-text','price-val','price-pct','source','act-type','prod','slogan','list-items','list-prefix','slogan2','list2','custom-color-input'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('on'));
+  S.colorScheme = '';
+  const out = document.getElementById('output');
+  out.textContent = '填寫左側參數，prompt 即時生成在這裡';
+  out.classList.add('empty');
+  document.getElementById('cct').textContent = '0 字';
+  document.getElementById('priority-preview').innerHTML = '';
+}
+
+setColorMode('auto');
+rebuild();
+</script>
+</body>
+</html>
