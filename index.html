@@ -114,6 +114,11 @@ input[type=text]::placeholder{color:var(--text-3)}
 .output-header{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:space-between}
 .output-title{font-size:12px;font-weight:600;color:var(--text)}
 .layer-flow{display:flex;align-items:center;gap:4px;font-size:10.5px;color:var(--text-3);flex-wrap:wrap}
+.output-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface2)}
+.output-tab{flex:1;padding:9px 8px;font-size:11.5px;font-weight:500;text-align:center;cursor:pointer;border:none;background:none;color:var(--text-3);font-family:inherit;transition:all .12s;border-bottom:2px solid transparent;line-height:1.3}
+.output-tab:hover{color:var(--text-2)}
+.output-tab.on{color:var(--orange);border-bottom-color:var(--orange);background:var(--surface)}
+.tab-desc{font-size:11px;color:var(--text-3);padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--border);line-height:1.5}
 .output-body{padding:16px;font-family:'SF Mono','Fira Code','Menlo',monospace;font-size:12px;color:var(--text);line-height:1.85;white-space:pre-wrap;word-break:break-word;min-height:160px}
 .output-body.ph{color:var(--text-3);font-family:inherit;font-size:13px;font-style:italic;line-height:1.6}
 .output-footer{padding:10px 16px;border-top:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:space-between}
@@ -250,6 +255,12 @@ input[type=text]::placeholder{color:var(--text-3)}
       <span class="output-title">生成的 Prompt</span>
       <div class="layer-flow" id="layer-flow"></div>
     </div>
+    <div class="output-tabs">
+      <button class="output-tab on" onclick="switchTab('full',this)">Step 1 · 完整版</button>
+      <button class="output-tab" onclick="switchTab('bg',this)">Step 2 · 無文字底板</button>
+      <button class="output-tab" onclick="switchTab('text',this)">Step 3 · 純文字特效</button>
+    </div>
+    <div class="tab-desc" id="tab-desc">含產品、背景、所有文字的完整包框，用來確認整體效果</div>
     <div class="output-body ph" id="output">新增上方區塊並填入資訊，Prompt 會自動出現在這裡</div>
     <div class="output-footer">
       <span class="cct" id="cct">0 字</span>
@@ -258,7 +269,7 @@ input[type=text]::placeholder{color:var(--text-3)}
           <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>重置
         </button>
         <button class="btn primary" id="copybtn" onclick="doCopy()">
-          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2v1"/></svg>複製 Prompt
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>複製 Prompt
         </button>
       </div>
     </div>
@@ -494,7 +505,7 @@ ${colorDesc}
 【文字安排】
 ${tz}，資訊架構如下：
 
-${layerTexts.join('\n\n')}
+${layerTexts.join(SEP)}
 
 【層次效果】
 ${en}
@@ -510,14 +521,77 @@ ${en}
 
 整體畫面需呈現：${vibe}，適合社群短影音封面與影片包框使用。`;
 
-  out.textContent=prompt;
+  // store prompts globally for tab switching
+  window._prompts={
+    full: prompt,
+    bg: buildBgPrompt(bg,vibe,pp,ld,fz,colorDesc),
+    text: buildTextPrompt(vibe,tz,layerTexts)
+  };
+
+  const curTab=window._curTab||'full';
+  out.textContent=window._prompts[curTab];
   out.classList.remove('ph');
-  document.getElementById('cct').textContent=prompt.length+' 字';
+  document.getElementById('cct').textContent=window._prompts[curTab].length+' 字';
 
   flow.innerHTML=layers.map((l,i)=>{
     const pri=l.pri||LAYER_DEF[l.type].defaultPri;
     return `<span>${PDOT[pri]} ${i+1}.${LAYER_DEF[l.type].name}</span>`;
   }).join('<span style="color:var(--border-strong)"> › </span>');
+}
+
+const SEP='\n\n';
+function buildBgPrompt(bg,vibe,pp,ld,fz,colorDesc){
+  return `⚠️ 請在同一個對話中，基於你剛才生成的包框設計，輸出第二張圖。
+
+【這張圖的用途】
+這是「底板層」，後製時會在上方疊加文字特效圖層。
+必須與上一張設計完全一致，只移除所有文字，其餘不變。
+
+【與上一張的差異 — 只改這一點】
+✅ 保留：整體版型、色系、背景氛圍、產品位置、所有裝飾元素、弧形邊框、光暈流線
+❌ 移除：所有文字、數字、標語、標籤框內的文字內容
+
+【重要說明】
+- 產品位置、大小、角度必須與上一張完全相同
+- 包框背景設計、色塊位置、弧形分界必須與上一張完全相同
+- 原本放文字的空間請保留留白，不要用裝飾填滿
+- 影片區（綠幕/藍幕）保持一樣的乾淨底色
+
+【輸出規格】
+1:1 正方形，與上一張相同尺寸`;
+}
+
+function buildTextPrompt(vibe,tz,layerTexts){
+  if(!layerTexts||!layerTexts.length) return '（尚無文字內容，請先新增資訊區塊）';
+  return `請根據以下文字內容與層級設定，生成一張 1:1 正方形純文字特效圖層，用於後製疊加在包框底板上方。
+
+【用途說明】
+這是「文字層」，背景需為透明（或純黑色去背用），只呈現文字排版與特效設計，後製時疊加在底板圖層上方。
+
+【輸出要求】
+- 背景：完全透明（PNG 格式，alpha channel）
+- 如無法輸出透明底，請使用純黑色背景（#000000）作為去背基準
+- 不需要產品圖、不需要包框背景、不需要任何裝飾底圖
+
+【文字排版區域】
+${tz}，文字層級與視覺要求如下：
+
+${layerTexts.join(SEP)}
+
+【文字特效風格】
+整體氛圍：${vibe}
+文字可加入：
+- 柔和陰影或光暈效果（增加立體感）
+- 膠囊框、圓角色塊、緞帶標籤等作為文字容器
+- 金色或品牌色描邊
+- 但背景需保持透明，不可有底色填滿整個畫面
+
+【限制條件】
+- 只能包含上述列出的文字，不可新增其他文字
+- 所有文字必須為正確繁體中文，不可出現錯字、亂碼
+- 版面留白需與底板圖層對應，方便疊合
+
+整體文字層需清楚易讀、層級分明，適合後製疊加使用。`;
 }
 
 // Global controls
@@ -548,6 +622,27 @@ function togTag(el,key,val){
 function setLayout(l,card){
   document.querySelectorAll('.lv-card').forEach(c=>c.classList.remove('on'));
   card.classList.add('on'); S.layout=l; rebuild();
+}
+
+let _curTab='full';
+const TAB_DESC={
+  full:'【Step 1】先貼這個讓 ChatGPT 生成完整設計，確認構圖、色系、產品位置都滿意後，再繼續同一個對話貼 Step 2',
+  bg:'【Step 2】在同一個 ChatGPT 對話中繼續貼，要求基於 Step 1 的設計重新輸出無文字底板，確保版型一致',
+  text:'【Step 3】在同一個 ChatGPT 對話中繼續貼，要求基於同一設計輸出純文字特效層，確保位置對齊'
+};
+
+function switchTab(tab, btn){
+  _curTab=tab;
+  window._curTab=tab;
+  document.querySelectorAll('.output-tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('tab-desc').textContent=TAB_DESC[tab];
+  if(window._prompts&&window._prompts[tab]){
+    const out=document.getElementById('output');
+    out.textContent=window._prompts[tab];
+    out.classList.remove('ph');
+    document.getElementById('cct').textContent=window._prompts[tab].length+' 字';
+  }
 }
 
 function doCopy(){
